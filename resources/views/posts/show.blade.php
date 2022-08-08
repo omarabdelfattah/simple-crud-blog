@@ -1,0 +1,1 @@
+Display the specified post with id {{$id}}.

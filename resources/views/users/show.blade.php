@@ -1,0 +1,1 @@
+Display the specified resource with id {{$id}}.
