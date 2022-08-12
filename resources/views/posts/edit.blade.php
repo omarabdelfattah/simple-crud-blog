@@ -34,7 +34,7 @@
         <div class="col-sm-10">
             <select name="user_id" id="user_id">
                 @foreach ($users as $user)
-                    <option value="{{ $user->id }}" {{$post['user_id'] ? "selected" : " "}}  >{{ $user->name }}</option>
+                    <option value="{{ $user->id }}" {{$post['user_id'] == $user->id ? "selected" : " "}}  >{{ $user->name }}</option>
                 @endforeach
             </select>
         </div>

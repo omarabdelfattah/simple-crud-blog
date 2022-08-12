@@ -22,7 +22,7 @@
             <td><a href="{{ Route('posts.show',['id'=>$post['id'] ]) }}">{{ $post["title"] }}</a></td>
             <th scope="row">{{$post["enabled"] ? "yes" : "No"}}</th>
             <th scope="row">{{ $post["published_at"] }}</th>
-            <th scope="row">{{$post["user_id"]}}</th>
+            <th scope="row">{{$post->user->name}}</th>
             <td>
                 <div class="row text-center">
                     <div class="col-md-6 "><a href="{{ Route('posts.edit',['id'=>$post['id'] ]) }}" class="btn btn-primary">Edit</a></div>

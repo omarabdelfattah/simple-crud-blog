@@ -88,6 +88,7 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->body = $request->body;
         $post->enabled = $request->enabled ? 1 : 0;
+        $post->user_id = $request->user_id;
         $post->published_at = \Carbon\Carbon::now() ;
         $post->save();
 

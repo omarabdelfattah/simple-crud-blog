@@ -10,6 +10,7 @@
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
+            <th scope="col">Posts count</th>
             <th scope="col">Actions</th>
             </tr>
         </thead>
@@ -19,6 +20,7 @@
                 <th scope="row">{{$user["id"]}}</th>
                 <td><a href="{{ Route('users.show',['id'=>$user['id'] ]) }}">{{ $user["name"] }}</a></td>
                 <td>{{ $user["email"] }}</td>
+                <td>{{ $user->posts_count }} Post</td>
                 <td>
                     <div class="row text-center">
                         <div class="col-md-6 "><a href="{{ Route('users.edit',['id'=>$user['id'] ]) }}" class="btn btn-primary">Edit</a></div>

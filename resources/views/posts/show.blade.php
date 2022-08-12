@@ -25,7 +25,14 @@
         <td>{{$post['enabled'] ? "yes" : "No" }}</td>
     </tr>
 
+    <tr>
+        <td>user</td>
+        <td> <a href="{{ Route('users.show',['id' => $post->user->id ]) }}">{{$post->user->name }}</a> </td>
+    </tr>
+
+    
   </tbody>
 </table>
+
 
 @endsection
