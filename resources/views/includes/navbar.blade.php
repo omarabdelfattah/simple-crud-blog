@@ -9,6 +9,7 @@
             <li class="nav-item active">
                 <a class="nav-link" href="{{Route('users.index')}}">Home <span class="sr-only">(current)</span></a>
             </li>
+           
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
                 Users
@@ -23,11 +24,26 @@
                 Posts
                 </a>
                 <div class="dropdown-menu">
-                <a  @class(['dropdown-item ','active' => Route::is("posts.index")]) href="{{Route('posts.index')}}">List</a>
-                <a @class(['dropdown-item ','active' => Route::is("posts.create")]) href="{{Route('posts.create')}}">New Post</a>
-                <a @class(['dropdown-item ','active' => Route::is("posts.deleted_list")]) href="{{Route('posts.deleted_list')}}">Deleted list</a>
-                </div>
+                    <a  @class(['dropdown-item ','active' => Route::is("posts.index")]) href="{{Route('posts.index')}}">List</a>
+                    <a @class(['dropdown-item ','active' => Route::is("posts.create")]) href="{{Route('posts.create')}}">New Post</a>
+                    <a @class(['dropdown-item ','active' => Route::is("posts.deleted_list")]) href="{{Route('posts.deleted_list')}}">Deleted list</a>
+                 </div>
             </li>
+            @if(auth()->check())
+                <li class="nav-item active">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-success">Logout</button>
+                    </form>
+                </li>
+            @else
+                <li class="nav-item active">
+                    <a   class="btn btn-success" href="{{Route('login')}}">login</a>
+                </li>
+                <li class="nav-item active mx-3">
+                    <a   class="btn btn-primary" href="{{Route('register')}}">register</a>
+                </li>
+            @endif
             </ul>
         </div>
     </div>

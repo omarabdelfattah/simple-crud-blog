@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
-
+use App\Http\Requests\postHandle;
 
 class PostController extends Controller
 {
@@ -26,8 +26,8 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {   $users = $user = User::all();
-        return view('posts.create',['users'=>$users]);
+    {  
+        return view('posts.create');
     }
 
     /**
@@ -36,16 +36,41 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(postHandle $request)
     {   
-        $post = Post::create([
-            'body' => $request->body,
-            'title' => $request->title,
-            'user_id' => $request->user_id,
-            'enabled' => isset($request->enabled) ? 1 : 0,
-            'published_at' =>  \Carbon\Carbon::now(),
-        ]);
-        return redirect()->route('posts.index');
+
+        if( $request->hasFile('image') ){
+
+            try {
+                $path = $request->file('image')->store('images','public');
+                $post = Post::create([
+                    'body' => $request->body,
+                    'title' => $request->title,
+                    'user_id' => auth()->user()->id,
+                    'enabled' => isset($request->enabled) ? 1 : 0,
+                    'image' => $path,
+                    'published_at' =>  \Carbon\Carbon::now(),
+                ]);
+            } catch (\Throwable $th) {
+                return redirect()->back()->with('error','failed to upload image');
+            }
+                       
+        }else{
+            $post = Post::create([
+                'body' => $request->body,
+                'title' => $request->title,
+                'user_id' => auth()->user()->id,
+                'enabled' => isset($request->enabled) ? 1 : 0,
+                'published_at' =>  \Carbon\Carbon::now(),
+            ]);
+        }
+
+       
+
+           
+
+        return redirect()->back()->with('success','Post created successfully');
+       
     }
 
     /**
@@ -68,9 +93,13 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        $users = $user = User::all();
         $post = Post::find($id);
-        return view('posts.edit')->with(['id' => $id , 'post' => $post , 'users' => $users]);
+
+        if($post->user_id != auth()->id()){
+            return redirect()->route('posts.index')->with('error','You are not authorized to edit this post');
+        }
+
+        return view('posts.edit')->with(['id' => $id , 'post' => $post]);
     }
 
     /**
@@ -80,22 +109,41 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        
-        
+    public function update(postHandle $request, $id){
+    
         $post = Post::find($id);
-        $post->title = $request->title;
-        $post->body = $request->body;
-        $post->enabled = $request->enabled ? 1 : 0;
-        $post->user_id = $request->user_id;
-        $post->published_at = \Carbon\Carbon::now() ;
-        $post->save();
 
-        // $post = Post::where('id',$id)->update($request->only(['title','body','enabled','published_at']));
+   
 
+        if( $request->hasFile('image') ){
 
-        return redirect()->route('posts.index');
+            try {
+                
+            $path = $request->file('image')->store('images','public');
+    
+            $post->title = $request->title;
+            $post->body = $request->body;
+            $post->enabled = $request->enabled ? 1 : 0;
+            $post->user_id = auth()->user()->id;
+            $post->image = $path;
+            $post->published_at = \Carbon\Carbon::now() ;
+            $post->save();
+
+            } catch (\Throwable $th) {
+                return redirect()->back()->with('error','failed to upload image');
+            }
+
+        }else{
+            
+            $post->title = $request->title;
+            $post->body = $request->body;
+            $post->enabled = $request->enabled ? 1 : 0;
+            $post->user_id = auth()->user()->id;
+            $post->published_at = \Carbon\Carbon::now() ;
+            $post->save();
+        }
+        return redirect()->back()->with('success','Post updated successfully');
+      
     }
 
     /**

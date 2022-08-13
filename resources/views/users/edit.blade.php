@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.default')
 
 
 @section('page_title', 'Edit user'.$user['name'])
